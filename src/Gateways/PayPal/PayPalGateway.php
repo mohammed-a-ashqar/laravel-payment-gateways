@@ -12,7 +12,8 @@ use Alashqar\PaymentGateways\Data\RefundResult;
 use Alashqar\PaymentGateways\Data\WebhookEvent;
 use Alashqar\PaymentGateways\Enums\PaymentStatus;
 use Alashqar\PaymentGateways\Exceptions\GatewayException;
-use Alashqar\PaymentGateways\Exceptions\UnsupportedOperation;
+use Alashqar\PaymentGateways\Exceptions\InvalidConfiguration;
+use Alashqar\PaymentGateways\Exceptions\InvalidSignature;
 use Alashqar\PaymentGateways\Money;
 use Alashqar\PaymentGateways\Support\GatewayClient;
 use Alashqar\PaymentGateways\Support\Payload;
@@ -38,11 +39,21 @@ final readonly class PayPalGateway implements CapturesPayments, Gateway
 
     public const LIVE_URL = 'https://api-m.paypal.com';
 
+    /** Body field of the verification call => header PayPal delivered it in. */
+    private const SIGNATURE_HEADERS = [
+        'auth_algo' => 'PAYPAL-AUTH-ALGO',
+        'cert_url' => 'PAYPAL-CERT-URL',
+        'transmission_id' => 'PAYPAL-TRANSMISSION-ID',
+        'transmission_sig' => 'PAYPAL-TRANSMISSION-SIG',
+        'transmission_time' => 'PAYPAL-TRANSMISSION-TIME',
+    ];
+
     public function __construct(
         private GatewayClient $client,
         private PayPalTokenProvider $tokens,
         private SupportedCurrencies $currencies,
         private string $baseUrl,
+        private ?string $webhookId = null,
         private ?string $brandName = null,
     ) {}
 
@@ -153,9 +164,53 @@ final readonly class PayPalGateway implements CapturesPayments, Gateway
         );
     }
 
+    /**
+     * PayPal signs webhooks with a certificate chain; rather than re-implementing
+     * certificate validation, the event is verified by PayPal's own endpoint.
+     *
+     * @see https://developer.paypal.com/docs/api/webhooks/v1/#verify-webhook-signature_post
+     */
     public function parseWebhook(Request $request): WebhookEvent
     {
-        throw UnsupportedOperation::for($this->name(), 'webhooks');
+        if ($this->webhookId === null) {
+            throw InvalidConfiguration::missing($this->name(), 'webhook_id');
+        }
+
+        $fields = [];
+
+        foreach (self::SIGNATURE_HEADERS as $field => $header) {
+            $value = $request->header($header);
+
+            if (! is_string($value) || $value === '') {
+                throw InvalidSignature::because($this->name(), "the {$header} header is missing.");
+            }
+
+            $fields[$field] = $value;
+        }
+
+        $raw = trim($request->getContent());
+        $event = Payload::fromJson($raw);
+
+        if (! str_starts_with($raw, '{') || $event->isEmpty()) {
+            throw InvalidSignature::because($this->name(), 'the body is not a JSON object.');
+        }
+
+        // The event is spliced in verbatim: decoding and re-encoding it could change
+        // number or unicode formatting and make PayPal reject a genuine event.
+        $fields['webhook_id'] = $this->webhookId;
+        $body = substr((string) json_encode($fields, JSON_UNESCAPED_SLASHES), 0, -1).',"webhook_event":'.$raw.'}';
+
+        $response = $this->ensureSuccessful($this->call(
+            fn (PendingRequest $http): Response => $http
+                ->withBody($body, 'application/json')
+                ->post($this->baseUrl.'/v1/notifications/verify-webhook-signature')
+        ));
+
+        if (Payload::fromResponse($response)->string('verification_status') !== 'SUCCESS') {
+            throw InvalidSignature::because($this->name(), 'PayPal did not confirm the signature.');
+        }
+
+        return (new PayPalWebhookTranslator)->translate($event);
     }
 
     private function order(string $orderId): Payload

@@ -123,6 +123,7 @@ class PaymentManager extends Manager
             ),
             currencies: $config->currencies(),
             baseUrl: $baseUrl,
+            webhookId: $config->optional('webhook_id'),
             brandName: $config->optional('brand_name'),
         );
     }
