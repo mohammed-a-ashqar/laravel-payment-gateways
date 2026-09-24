@@ -1,0 +1,21 @@
+{
+  "event": "authorization",
+  "customer_identity": "252612345678",
+  "cardholder_name": "John Doe",
+  "merchant_id": 10165,
+  "merchant_uid": "M400394",
+  "user_id": "400394",
+  "payment": {
+    "transaction_id": "1303630",
+    "order_id": "ORD-2024-001",
+    "transfer_code": "ISR0011303630",
+    "amount": 100.50,
+    "currency": "USD",
+    "payment_method": "MWALLET_ACCOUNT",
+    "status": "APPROVED",
+    "reference_id": "REF-2024-4567",
+    "channel": "WEB",
+    "description": "Payment for order ORD-2024-001",
+    "date": "2025-08-13 15:04:05"
+  }
+}
