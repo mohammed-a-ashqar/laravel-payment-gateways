@@ -6,6 +6,10 @@ namespace Alashqar\PaymentGateways;
 
 use Alashqar\PaymentGateways\Contracts\Gateway;
 use Alashqar\PaymentGateways\Exceptions\InvalidConfiguration;
+use Alashqar\PaymentGateways\Support\ConfigReader;
+use Alashqar\PaymentGateways\Support\GatewayClient;
+use Alashqar\PaymentGateways\Support\HttpOptions;
+use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Support\Manager;
 use InvalidArgumentException;
 
@@ -46,7 +50,7 @@ class PaymentManager extends Manager
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     public function gatewayConfig(string $name): array
     {
@@ -56,21 +60,31 @@ class PaymentManager extends Manager
             throw InvalidConfiguration::invalid($name, "payment-gateways.gateways.{$name}", 'expected an array.');
         }
 
-        /** @var array<string, mixed> $config */
         return $config;
     }
 
     /**
-     * The global HTTP settings merged with the gateway's own "http" overrides.
-     *
-     * @return array<string, mixed>
+     * An HTTP client configured with the global settings merged with the gateway's
+     * own "http" overrides. Custom drivers can use it to get the same timeout and
+     * retry behaviour as the built-in ones.
      */
-    protected function httpConfig(string $name): array
+    public function client(string $name): GatewayClient
     {
         $global = $this->config->get('payment-gateways.http', []);
         $local = $this->gatewayConfig($name)['http'] ?? [];
 
-        return array_merge(is_array($global) ? $global : [], is_array($local) ? $local : []);
+        $options = array_merge(is_array($global) ? $global : [], is_array($local) ? $local : []);
+
+        return new GatewayClient(
+            $this->container->make(HttpFactory::class),
+            $name,
+            HttpOptions::fromArray($name, $options),
+        );
+    }
+
+    protected function configReader(string $name): ConfigReader
+    {
+        return new ConfigReader($name, $this->gatewayConfig($name));
     }
 
     /**

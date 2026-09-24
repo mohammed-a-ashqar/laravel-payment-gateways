@@ -6,6 +6,7 @@ namespace Alashqar\PaymentGateways\Facades;
 
 use Alashqar\PaymentGateways\Contracts\Gateway;
 use Alashqar\PaymentGateways\PaymentManager;
+use Alashqar\PaymentGateways\Support\GatewayClient;
 use Closure;
 use Illuminate\Support\Facades\Facade;
 
@@ -14,7 +15,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static mixed driver(?string $driver = null)
  * @method static PaymentManager extend(string $driver, Closure $callback)
  * @method static string getDefaultDriver()
- * @method static array<string, mixed> gatewayConfig(string $name)
+ * @method static array<array-key, mixed> gatewayConfig(string $name)
+ * @method static GatewayClient client(string $name)
  *
  * @see PaymentManager
  */
