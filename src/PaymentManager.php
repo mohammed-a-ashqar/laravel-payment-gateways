@@ -6,6 +6,7 @@ namespace Alashqar\PaymentGateways;
 
 use Alashqar\PaymentGateways\Contracts\Gateway;
 use Alashqar\PaymentGateways\Exceptions\InvalidConfiguration;
+use Alashqar\PaymentGateways\Gateways\Stripe\StripeGateway;
 use Alashqar\PaymentGateways\Support\ConfigReader;
 use Alashqar\PaymentGateways\Support\GatewayClient;
 use Alashqar\PaymentGateways\Support\HttpOptions;
@@ -79,6 +80,19 @@ class PaymentManager extends Manager
             $this->container->make(HttpFactory::class),
             $name,
             HttpOptions::fromArray($name, $options),
+        );
+    }
+
+    protected function createStripeDriver(): StripeGateway
+    {
+        $config = $this->configReader('stripe');
+
+        return new StripeGateway(
+            client: $this->client('stripe'),
+            secretKey: $config->required('secret_key'),
+            currencies: $config->currencies(),
+            apiVersion: $config->optional('api_version'),
+            baseUrl: $config->optional('base_url', 'https://api.stripe.com') ?? 'https://api.stripe.com',
         );
     }
 

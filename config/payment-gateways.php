@@ -36,6 +36,17 @@ return [
 
     'gateways' => [
 
+        'stripe' => [
+            'secret_key' => env('STRIPE_SECRET'),
+            'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+            // Seconds a signed webhook stays valid; Stripe's own libraries default to 300.
+            'webhook_tolerance' => 300,
+            // Pin a Stripe API version, or null to use your account's default.
+            'api_version' => env('STRIPE_API_VERSION'),
+            // Null lets Stripe validate the currency; a list restricts it locally.
+            'currencies' => null,
+        ],
+
     ],
 
 ];

@@ -1,0 +1,16 @@
+{
+  "id": "re_1Nispe2eZvKYlo2Cd31jOCgZ",
+  "object": "refund",
+  "amount": 1000,
+  "balance_transaction": "txn_1Nispe2eZvKYlo2CYezqFhEx",
+  "charge": "ch_1NirD82eZvKYlo2CIvbtLWuY",
+  "created": 1692942318,
+  "currency": "usd",
+  "metadata": {},
+  "payment_intent": "pi_3MtwBwLkdIwHu7ix28a3tqPa",
+  "reason": null,
+  "receipt_number": null,
+  "source_transfer_reversal": null,
+  "status": "succeeded",
+  "transfer_reversal": null
+}
