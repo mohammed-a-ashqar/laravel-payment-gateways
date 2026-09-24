@@ -6,10 +6,13 @@ namespace Alashqar\PaymentGateways;
 
 use Alashqar\PaymentGateways\Contracts\Gateway;
 use Alashqar\PaymentGateways\Exceptions\InvalidConfiguration;
+use Alashqar\PaymentGateways\Gateways\PayPal\PayPalGateway;
+use Alashqar\PaymentGateways\Gateways\PayPal\PayPalTokenProvider;
 use Alashqar\PaymentGateways\Gateways\Stripe\StripeGateway;
 use Alashqar\PaymentGateways\Support\ConfigReader;
 use Alashqar\PaymentGateways\Support\GatewayClient;
 use Alashqar\PaymentGateways\Support\HttpOptions;
+use Illuminate\Contracts\Cache\Factory as CacheFactory;
 use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Support\Manager;
 use InvalidArgumentException;
@@ -95,6 +98,32 @@ class PaymentManager extends Manager
             webhookTolerance: $config->integer('webhook_tolerance', 300),
             apiVersion: $config->optional('api_version'),
             baseUrl: $config->optional('base_url', 'https://api.stripe.com') ?? 'https://api.stripe.com',
+        );
+    }
+
+    protected function createPaypalDriver(): PayPalGateway
+    {
+        $config = $this->configReader('paypal');
+
+        $baseUrl = $config->optional('base_url') ?? match ($config->oneOf('mode', ['sandbox', 'live'], 'sandbox')) {
+            'live' => PayPalGateway::LIVE_URL,
+            default => PayPalGateway::SANDBOX_URL,
+        };
+
+        $client = $this->client('paypal');
+
+        return new PayPalGateway(
+            client: $client,
+            tokens: new PayPalTokenProvider(
+                $client,
+                $this->container->make(CacheFactory::class)->store($config->optional('cache_store')),
+                $config->required('client_id'),
+                $config->required('client_secret'),
+                $baseUrl,
+            ),
+            currencies: $config->currencies(),
+            baseUrl: $baseUrl,
+            brandName: $config->optional('brand_name'),
         );
     }
 

@@ -1,0 +1,31 @@
+{
+  "id": "5O190127TN364715T",
+  "status": "PAYER_ACTION_REQUIRED",
+  "payment_source": {
+    "paypal": {}
+  },
+  "purchase_units": [
+    {
+      "reference_id": "order_1001",
+      "amount": {
+        "currency_code": "USD",
+        "value": "25.00"
+      },
+      "custom_id": "order_1001",
+      "invoice_id": "order_1001"
+    }
+  ],
+  "create_time": "2024-09-24T10:00:00Z",
+  "links": [
+    {
+      "href": "https://api-m.sandbox.paypal.com/v2/checkout/orders/5O190127TN364715T",
+      "rel": "self",
+      "method": "GET"
+    },
+    {
+      "href": "https://www.sandbox.paypal.com/checkoutnow?token=5O190127TN364715T",
+      "rel": "payer-action",
+      "method": "GET"
+    }
+  ]
+}

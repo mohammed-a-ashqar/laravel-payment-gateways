@@ -1,0 +1,51 @@
+{
+  "id": "5O190127TN364715T",
+  "status": "COMPLETED",
+  "payment_source": {
+    "paypal": {
+      "email_address": "buyer@example.com",
+      "account_id": "QYR5Z8XDVJNXQ",
+      "account_status": "VERIFIED"
+    }
+  },
+  "purchase_units": [
+    {
+      "reference_id": "order_1001",
+      "payments": {
+        "captures": [
+          {
+            "id": "3C679366HH908993F",
+            "status": "COMPLETED",
+            "amount": {
+              "currency_code": "USD",
+              "value": "25.00"
+            },
+            "final_capture": true,
+            "seller_protection": {
+              "status": "ELIGIBLE"
+            },
+            "custom_id": "order_1001",
+            "invoice_id": "order_1001",
+            "create_time": "2024-09-24T10:05:00Z",
+            "update_time": "2024-09-24T10:05:00Z"
+          }
+        ]
+      }
+    }
+  ],
+  "payer": {
+    "name": {
+      "given_name": "John",
+      "surname": "Doe"
+    },
+    "email_address": "buyer@example.com",
+    "payer_id": "QYR5Z8XDVJNXQ"
+  },
+  "links": [
+    {
+      "href": "https://api-m.sandbox.paypal.com/v2/checkout/orders/5O190127TN364715T",
+      "rel": "self",
+      "method": "GET"
+    }
+  ]
+}

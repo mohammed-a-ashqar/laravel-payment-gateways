@@ -47,6 +47,23 @@ return [
             'currencies' => null,
         ],
 
+        'paypal' => [
+            'client_id' => env('PAYPAL_CLIENT_ID'),
+            'client_secret' => env('PAYPAL_CLIENT_SECRET'),
+            // "sandbox" or "live".
+            'mode' => env('PAYPAL_MODE', 'sandbox'),
+            // The id of the webhook you registered in the PayPal developer dashboard.
+            'webhook_id' => env('PAYPAL_WEBHOOK_ID'),
+            'brand_name' => env('PAYPAL_BRAND_NAME'),
+            // Cache store for OAuth tokens; null uses the default store.
+            'cache_store' => null,
+            // https://developer.paypal.com/reference/currency-codes/
+            'currencies' => [
+                'AUD', 'BRL', 'CAD', 'CNY', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF', 'ILS', 'JPY', 'MYR',
+                'MXN', 'TWD', 'NZD', 'NOK', 'PHP', 'PLN', 'GBP', 'SGD', 'SEK', 'CHF', 'THB', 'USD',
+            ],
+        ],
+
     ],
 
 ];
