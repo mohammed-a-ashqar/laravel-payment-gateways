@@ -9,6 +9,7 @@ use Alashqar\PaymentGateways\Support\Payload;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use SensitiveParameter;
 
 /**
  * OAuth 2.0 client-credentials tokens, cached until shortly before they expire.
@@ -27,7 +28,7 @@ final readonly class PayPalTokenProvider
         private GatewayClient $client,
         private Cache $cache,
         private string $clientId,
-        private string $clientSecret,
+        #[SensitiveParameter] private string $clientSecret,
         private string $baseUrl,
     ) {}
 

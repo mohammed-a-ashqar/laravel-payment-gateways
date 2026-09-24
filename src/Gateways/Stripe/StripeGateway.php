@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use SensitiveParameter;
 
 /**
  * Stripe via hosted Checkout Sessions, spoken over the REST API directly.
@@ -36,7 +37,7 @@ final readonly class StripeGateway implements Gateway
 {
     public function __construct(
         private GatewayClient $client,
-        private string $secretKey,
+        #[SensitiveParameter] private string $secretKey,
         private SupportedCurrencies $currencies,
         private ?string $webhookSecret = null,
         private int $webhookTolerance = 300,
