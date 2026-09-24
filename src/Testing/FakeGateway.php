@@ -141,6 +141,8 @@ final class FakeGateway implements AuthorizesPayments, Gateway
      */
     public function parseWebhook(Request $request): WebhookEvent
     {
+        $this->throwIfConfigured();
+
         $payload = Payload::fromJson($request->getContent());
         $status = $payload->string('status');
 

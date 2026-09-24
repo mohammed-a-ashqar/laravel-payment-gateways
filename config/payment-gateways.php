@@ -34,6 +34,28 @@ return [
         'retry_delay_ms' => 250,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Webhooks
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, POST {path}/{gateway} verifies the incoming webhook with
+    | the gateway's driver and dispatches PaymentSucceeded, PaymentFailed and
+    | PaymentRefunded events. The route sits outside the "web" group, so no
+    | CSRF token is needed. Processed event ids are remembered for replay_ttl
+    | seconds so redelivered events are handled once.
+    |
+    */
+
+    'webhooks' => [
+        'enabled' => env('PAYMENT_WEBHOOKS_ENABLED', true),
+        'path' => 'payment-gateways/webhooks',
+        'middleware' => [],
+        'replay_ttl' => 60 * 60 * 24 * 7,
+        // Cache store used for replay protection; null uses the default store.
+        'cache_store' => null,
+    ],
+
     'gateways' => [
 
         'stripe' => [
