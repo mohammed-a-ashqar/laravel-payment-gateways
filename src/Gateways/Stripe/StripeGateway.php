@@ -12,7 +12,7 @@ use Alashqar\PaymentGateways\Data\WebhookEvent;
 use Alashqar\PaymentGateways\Enums\PaymentStatus;
 use Alashqar\PaymentGateways\Enums\RefundStatus;
 use Alashqar\PaymentGateways\Exceptions\GatewayException;
-use Alashqar\PaymentGateways\Exceptions\UnsupportedOperation;
+use Alashqar\PaymentGateways\Exceptions\InvalidConfiguration;
 use Alashqar\PaymentGateways\Money;
 use Alashqar\PaymentGateways\Support\GatewayClient;
 use Alashqar\PaymentGateways\Support\Payload;
@@ -20,6 +20,7 @@ use Alashqar\PaymentGateways\Support\SupportedCurrencies;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -37,6 +38,8 @@ final readonly class StripeGateway implements Gateway
         private GatewayClient $client,
         private string $secretKey,
         private SupportedCurrencies $currencies,
+        private ?string $webhookSecret = null,
+        private int $webhookTolerance = 300,
         private ?string $apiVersion = null,
         private string $baseUrl = 'https://api.stripe.com',
     ) {}
@@ -117,7 +120,16 @@ final readonly class StripeGateway implements Gateway
 
     public function parseWebhook(Request $request): WebhookEvent
     {
-        throw UnsupportedOperation::for($this->name(), 'webhooks');
+        if ($this->webhookSecret === null) {
+            throw InvalidConfiguration::missing($this->name(), 'webhook_secret');
+        }
+
+        $payload = $request->getContent();
+
+        (new StripeSignature($this->webhookSecret, $this->webhookTolerance))
+            ->verify($payload, $request->header('Stripe-Signature'), Carbon::now()->getTimestamp());
+
+        return (new StripeWebhookTranslator)->translate(Payload::fromJson($payload));
     }
 
     private function session(string $sessionId): Payload

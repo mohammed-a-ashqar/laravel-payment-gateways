@@ -1,0 +1,32 @@
+{
+  "id": "evt_3MtwBwLkdIwHu7ix0RefundEv",
+  "object": "event",
+  "api_version": "2024-06-20",
+  "created": 1727180000,
+  "data": {
+    "object": {
+      "id": "ch_3MtwBwLkdIwHu7ix0jcCyGH4",
+      "object": "charge",
+      "amount": 2500,
+      "amount_captured": 2500,
+      "amount_refunded": 1000,
+      "captured": true,
+      "currency": "usd",
+      "livemode": false,
+      "metadata": {
+        "reference": "order_1001"
+      },
+      "paid": true,
+      "payment_intent": "pi_3MtwBwLkdIwHu7ix28a3tqPa",
+      "refunded": false,
+      "status": "succeeded"
+    }
+  },
+  "livemode": false,
+  "pending_webhooks": 1,
+  "request": {
+    "id": "req_Qm3r1kZ2l0aBcD",
+    "idempotency_key": "refund-order_1001-1"
+  },
+  "type": "charge.refunded"
+}

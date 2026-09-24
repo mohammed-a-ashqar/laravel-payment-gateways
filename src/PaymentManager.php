@@ -91,6 +91,8 @@ class PaymentManager extends Manager
             client: $this->client('stripe'),
             secretKey: $config->required('secret_key'),
             currencies: $config->currencies(),
+            webhookSecret: $config->optional('webhook_secret'),
+            webhookTolerance: $config->integer('webhook_tolerance', 300),
             apiVersion: $config->optional('api_version'),
             baseUrl: $config->optional('base_url', 'https://api.stripe.com') ?? 'https://api.stripe.com',
         );
