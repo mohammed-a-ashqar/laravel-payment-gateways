@@ -165,6 +165,12 @@ class PaymentManager extends Manager
      */
     protected function callCustomCreator($driver): mixed
     {
-        return $this->customCreators[$driver]($this->container, $this->gatewayConfig($driver));
+        $creator = $this->customCreators[$driver];
+
+        if (! is_callable($creator)) {
+            throw new InvalidArgumentException("The creator registered for payment driver [{$driver}] is not callable.");
+        }
+
+        return $creator($this->container, $this->gatewayConfig($driver));
     }
 }

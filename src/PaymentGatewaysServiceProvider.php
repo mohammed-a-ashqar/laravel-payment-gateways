@@ -56,7 +56,7 @@ final class PaymentGatewaysServiceProvider extends ServiceProvider
 
         $this->app->make(Router::class)
             ->post(trim(is_string($path) ? $path : 'payment-gateways/webhooks', '/').'/{gateway}', WebhookController::class)
-            ->middleware(is_array($middleware) ? $middleware : [])
+            ->middleware(array_values(array_filter(is_array($middleware) ? $middleware : [], is_string(...))))
             ->where('gateway', '[A-Za-z0-9_-]+')
             ->name('payment-gateways.webhook');
     }
