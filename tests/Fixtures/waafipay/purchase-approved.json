@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0",
+  "timestamp": "2024-11-05 09:04:44.741",
+  "responseId": "12314",
+  "responseCode": "2001",
+  "errorCode": "0",
+  "responseMsg": "RCS_SUCCESS",
+  "params": {
+    "accountNo": "252611****1111",
+    "accountType": "MWALLET_ACCOUNT",
+    "state": "APPROVED",
+    "merchantCharges": "0.1",
+    "referenceId": "order_1001",
+    "transactionId": "1268666",
+    "issuerTransactionId": "ISR0011268666",
+    "txAmount": "10.0"
+  }
+}

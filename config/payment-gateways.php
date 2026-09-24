@@ -64,6 +64,26 @@ return [
             ],
         ],
 
+        'waafipay' => [
+            'merchant_uid' => env('WAAFIPAY_MERCHANT_UID'),
+            'api_user_id' => env('WAAFIPAY_API_USER_ID'),
+            'api_key' => env('WAAFIPAY_API_KEY'),
+            // "sandbox" (https://sandbox.waafipay.com/asm) or "live" (https://api.waafipay.net/asm).
+            'mode' => env('WAAFIPAY_MODE', 'sandbox'),
+            'payment_method' => 'MWALLET_ACCOUNT',
+            // Only needed for Hosted Payment Page webhooks.
+            'webhook_secret' => env('WAAFIPAY_WEBHOOK_SECRET'),
+            'webhook_tolerance' => 300,
+            'currencies' => ['USD'],
+            'http' => [
+                // The payer approves the charge on their phone, so allow a generous timeout.
+                'timeout' => 90,
+                // WaafiPay documents no idempotency key: a retried purchase could charge
+                // twice, so connection errors are surfaced instead of retried.
+                'retries' => 0,
+            ],
+        ],
+
     ],
 
 ];

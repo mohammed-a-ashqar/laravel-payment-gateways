@@ -9,6 +9,9 @@ use Alashqar\PaymentGateways\Exceptions\InvalidConfiguration;
 use Alashqar\PaymentGateways\Gateways\PayPal\PayPalGateway;
 use Alashqar\PaymentGateways\Gateways\PayPal\PayPalTokenProvider;
 use Alashqar\PaymentGateways\Gateways\Stripe\StripeGateway;
+use Alashqar\PaymentGateways\Gateways\WaafiPay\WaafiPayCredentials;
+use Alashqar\PaymentGateways\Gateways\WaafiPay\WaafiPayGateway;
+use Alashqar\PaymentGateways\Gateways\WaafiPay\WaafiPaySignature;
 use Alashqar\PaymentGateways\Support\ConfigReader;
 use Alashqar\PaymentGateways\Support\GatewayClient;
 use Alashqar\PaymentGateways\Support\HttpOptions;
@@ -125,6 +128,30 @@ class PaymentManager extends Manager
             baseUrl: $baseUrl,
             webhookId: $config->optional('webhook_id'),
             brandName: $config->optional('brand_name'),
+        );
+    }
+
+    protected function createWaafipayDriver(): WaafiPayGateway
+    {
+        $config = $this->configReader('waafipay');
+        $webhookSecret = $config->optional('webhook_secret');
+
+        return new WaafiPayGateway(
+            client: $this->client('waafipay'),
+            credentials: new WaafiPayCredentials(
+                $config->required('merchant_uid'),
+                $config->required('api_user_id'),
+                $config->required('api_key'),
+            ),
+            currencies: $config->currencies(),
+            endpoint: $config->optional('base_url') ?? match ($config->oneOf('mode', ['sandbox', 'live'], 'sandbox')) {
+                'live' => WaafiPayGateway::LIVE_URL,
+                default => WaafiPayGateway::SANDBOX_URL,
+            },
+            paymentMethod: $config->optional('payment_method', 'MWALLET_ACCOUNT') ?? 'MWALLET_ACCOUNT',
+            webhookSignature: $webhookSecret === null
+                ? null
+                : new WaafiPaySignature($webhookSecret, $config->integer('webhook_tolerance', 300)),
         );
     }
 

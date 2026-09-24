@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "timestamp": "2024-11-05 09:07:48.786",
+  "responseId": "12314",
+  "responseCode": "2001",
+  "errorCode": "0",
+  "responseMsg": "RCS_SUCCESS",
+  "params": {
+    "description": "success",
+    "state": "approved",
+    "transactionId": "1268667",
+    "referenceId": "order_1001"
+  }
+}

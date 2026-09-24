@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0",
+  "timestamp": "2024-11-05 09:06:12.118",
+  "responseId": "12315",
+  "responseCode": "5206",
+  "errorCode": "E10205",
+  "responseMsg": "Payment Failed (error occurred, please try again later)",
+  "params": null
+}
