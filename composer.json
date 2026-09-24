@@ -1,0 +1,63 @@
+{
+    "name": "mohammedname2002/laravel-payment-gateways",
+    "description": "A driver-based payment layer for Laravel with Stripe, PayPal and WaafiPay built on Laravel's HTTP client.",
+    "keywords": ["laravel", "payments", "stripe", "paypal", "waafipay", "webhooks", "payment-gateway"],
+    "type": "library",
+    "authors": [
+        {
+            "name": "Mohammed Alashqar",
+            "email": "mohammedname2002@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/cache": "^11.0|^12.0",
+        "illuminate/contracts": "^11.0|^12.0",
+        "illuminate/events": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "illuminate/routing": "^11.0|^12.0",
+        "illuminate/support": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Alashqar\\PaymentGateways\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Alashqar\\PaymentGateways\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "lint": "pint",
+        "lint:check": "pint --test",
+        "analyse": "phpstan analyse --memory-limit=512M"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Alashqar\\PaymentGateways\\PaymentGatewaysServiceProvider"
+            ],
+            "aliases": {
+                "Payments": "Alashqar\\PaymentGateways\\Facades\\Payments"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
