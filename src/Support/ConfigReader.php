@@ -43,6 +43,11 @@ final readonly class ConfigReader
         return $value === null || trim($value) === '' ? $default : trim($value);
     }
 
+    public function string(string $key, string $default): string
+    {
+        return $this->optional($key) ?? $default;
+    }
+
     public function integer(string $key, int $default): int
     {
         $value = $this->config[$key] ?? $default;
@@ -63,7 +68,7 @@ final readonly class ConfigReader
      */
     public function oneOf(string $key, array $allowed, string $default): string
     {
-        $value = $this->optional($key, $default) ?? $default;
+        $value = $this->string($key, $default);
 
         if (! in_array($value, $allowed, true)) {
             throw InvalidConfiguration::invalid($this->gateway, $key, 'expected one of: '.implode(', ', $allowed).'.');

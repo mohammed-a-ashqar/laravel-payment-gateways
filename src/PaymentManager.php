@@ -100,7 +100,7 @@ class PaymentManager extends Manager
             webhookSecret: $config->optional('webhook_secret'),
             webhookTolerance: $config->integer('webhook_tolerance', 300),
             apiVersion: $config->optional('api_version'),
-            baseUrl: $config->optional('base_url', 'https://api.stripe.com') ?? 'https://api.stripe.com',
+            baseUrl: $config->string('base_url', 'https://api.stripe.com'),
         );
     }
 
@@ -148,7 +148,7 @@ class PaymentManager extends Manager
                 'live' => WaafiPayGateway::LIVE_URL,
                 default => WaafiPayGateway::SANDBOX_URL,
             },
-            paymentMethod: $config->optional('payment_method', 'MWALLET_ACCOUNT') ?? 'MWALLET_ACCOUNT',
+            paymentMethod: $config->string('payment_method', 'MWALLET_ACCOUNT'),
             webhookSignature: $webhookSecret === null
                 ? null
                 : new WaafiPaySignature($webhookSecret, $config->integer('webhook_tolerance', 300)),
