@@ -1,5 +1,5 @@
 {
-    "name": "mohammedname2002/laravel-payment-gateways",
+    "name": "mohammed-a-ashqar/laravel-payment-gateways",
     "description": "A driver-based payment layer for Laravel with Stripe, PayPal and WaafiPay built on Laravel's HTTP client.",
     "keywords": ["laravel", "payments", "stripe", "paypal", "waafipay", "webhooks", "payment-gateway"],
     "type": "library",

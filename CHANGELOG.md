@@ -24,4 +24,4 @@ All notable changes to this project are documented here. The format is based on
 - Optional webhook route with replay protection and `PaymentSucceeded`, `PaymentFailed`,
   `PaymentRefunded` and `WebhookReceived` events.
 
-[0.1.0]: https://github.com/mohammedname2002/laravel-payment-gateways/releases/tag/v0.1.0
+[0.1.0]: https://github.com/mohammed-a-ashqar/laravel-payment-gateways/releases/tag/v0.1.0

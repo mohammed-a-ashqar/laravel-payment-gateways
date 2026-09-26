@@ -1,6 +1,6 @@
 # Laravel Payment Gateways
 
-[![CI](https://github.com/mohammedname2002/laravel-payment-gateways/actions/workflows/ci.yml/badge.svg)](https://github.com/mohammedname2002/laravel-payment-gateways/actions/workflows/ci.yml)
+[![CI](https://github.com/mohammed-a-ashqar/laravel-payment-gateways/actions/workflows/ci.yml/badge.svg)](https://github.com/mohammed-a-ashqar/laravel-payment-gateways/actions/workflows/ci.yml)
 ![PHP](https://img.shields.io/badge/PHP-8.2%20%7C%208.3%20%7C%208.4-777BB4)
 ![Laravel](https://img.shields.io/badge/Laravel-11%20%7C%2012-FF2D20)
 
@@ -44,7 +44,7 @@ code I would want to inherit:
 ## Installation
 
 ```bash
-composer require mohammedname2002/laravel-payment-gateways
+composer require mohammed-a-ashqar/laravel-payment-gateways
 php artisan vendor:publish --tag=payment-gateways-config
 ```
 
